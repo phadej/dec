@@ -1,4 +1,5 @@
 {-# LANGUAGE Safe #-}
+{-# LANGUAGE ScopedTypeVariables #-}
 module Data.Type.Dec (
     -- * Types
     Neg,
@@ -42,6 +43,32 @@ data Dec a
 -- but that seems to be a deep dive into singletons.
 class Decidable a where
     decide :: Dec a
+
+-------------------------------------------------------------------------------
+-- Instances
+-------------------------------------------------------------------------------
+
+-- | @()@ is truth.
+--
+-- @since 0.0.5
+instance Decidable () where
+    decide = Yes ()
+
+-- | 'Void' is falsehood.
+--
+-- @since 0.0.5
+instance Decidable Void where
+    decide = No id
+
+-- | Products of decidable propositions are decidable
+--
+-- @since 0.0.5
+instance (Decidable a, Decidable b) => Decidable (a, b) where
+    decide = case decide :: Dec a of
+        No nx -> No (\c -> nx (fst c))
+        Yes x -> case decide :: Dec b of
+            No ny -> No (\c -> ny (snd c))
+            Yes y -> Yes (x, y)
 
 -------------------------------------------------------------------------------
 -- Neg combinators
@@ -119,9 +146,10 @@ decToBool (No _)  = False
 
 -- | This relies on the fact that @a@ is /proposition/ in h-Prop sense.
 --
--- @since 0.1.3
+-- @since 0.0.5
 instance Decidable a => Boring (Dec a) where
     boring = decide
+
 -- | 'Yes', it's 'boring'.
 --
 -- @since 0.0.5
