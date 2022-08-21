@@ -1,7 +1,6 @@
 cabal-version:      >=1.10
 name:               dec
 version:            0.0.5
-x-revision:         2
 synopsis:           Decidable propositions.
 category:           Data, Dependent Types
 description:
