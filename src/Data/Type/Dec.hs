@@ -1,5 +1,6 @@
 {-# LANGUAGE Safe #-}
 {-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE FlexibleInstances #-}
 module Data.Type.Dec (
     -- * Types
     Neg,
@@ -69,6 +70,26 @@ instance (Decidable a, Decidable b) => Decidable (a, b) where
         Yes x -> case decide :: Dec b of
             No ny -> No (\c -> ny (snd c))
             Yes y -> Yes (x, y)
+
+-- | Implications are decidable
+instance forall a b. (Decidable a, Decidable b) => Decidable (a -> b) where
+    decide = case (decide :: Dec a, decide :: Dec b) of
+        (No no, _    ) -> Yes (absurd.no)
+        (Yes a, No no) -> No (\f -> no (f a))
+        (Yes _, Yes b) -> Yes (const b)
+
+-- | Disjunctions are decidable
+instance forall a b. (Decidable a, Decidable b) => Decidable (Either a b) where
+    decide = case (decide :: Dec a, decide :: Dec b) of
+        (No a, No b) -> No (either a b)
+        (Yes a, _  ) -> Yes (Left a)
+        (No _,Yes b) -> Yes (Right b)
+
+-- | Negations are decidable
+instance forall a. Decidable a => Decidable (a -> Void) where
+    decide = case decide :: Dec a of
+        Yes a -> No (\neg -> neg a)
+        No no -> Yes no
 
 -------------------------------------------------------------------------------
 -- Neg combinators
