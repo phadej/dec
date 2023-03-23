@@ -71,7 +71,8 @@ instance (Decidable a, Decidable b) => Decidable (a, b) where
             No ny -> No (\c -> ny (snd c))
             Yes y -> Yes (x, y)
 
--- | Implications are decidable
+-- | Implications are decidable.
+-- Note: This subsumes @(a -> Void)@ so negations are decidable.
 instance forall a b. (Decidable a, Decidable b) => Decidable (a -> b) where
     decide = case (decide :: Dec a, decide :: Dec b) of
         (No no, _    ) -> Yes (absurd.no)
@@ -84,12 +85,6 @@ instance forall a b. (Decidable a, Decidable b) => Decidable (Either a b) where
         (No a, No b) -> No (either a b)
         (Yes a, _  ) -> Yes (Left a)
         (No _,Yes b) -> Yes (Right b)
-
--- | Negations are decidable
-instance forall a. Decidable a => Decidable (a -> Void) where
-    decide = case decide :: Dec a of
-        Yes a -> No (\neg -> neg a)
-        No no -> Yes no
 
 -------------------------------------------------------------------------------
 -- Neg combinators
