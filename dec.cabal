@@ -1,7 +1,6 @@
 cabal-version:      >=1.10
 name:               dec
-version:            0.0.5
-x-revision:         2
+version:            0.0.6
 synopsis:           Decidable propositions.
 category:           Data, Dependent Types
 description:
@@ -25,19 +24,15 @@ copyright:          (c) 2019-2021 Oleg Grenrus
 build-type:         Simple
 extra-source-files: ChangeLog.md
 tested-with:
-  GHC ==7.8.4
-   || ==7.10.3
-   || ==8.0.2
-   || ==8.2.2
-   || ==8.4.4
-   || ==8.6.5
+  GHC ==8.6.5
    || ==8.8.4
    || ==8.10.7
    || ==9.0.2
    || ==9.2.8
-   || ==9.4.7
-   || ==9.6.3
-   || ==9.8.1
+   || ==9.4.8
+   || ==9.6.5
+   || ==9.8.2
+   || ==9.10.1
 
 source-repository head
   type:     git
@@ -49,11 +44,8 @@ library
   ghc-options:      -Wall -fprint-explicit-kinds
   exposed-modules:  Data.Type.Dec
   build-depends:
-      base    >=4.7 && <4.20
-    , boring  >=0.2 && <0.3
-
-  if !impl(ghc >=7.10)
-    build-depends: void >=0.7.3 && <0.8
+      base    >=4.12.0.0 && <4.21
+    , boring  >=0.2.2 && <0.3
 
   if impl(ghc >=9.0)
     -- these flags may abort compilation with GHC-8.10
