@@ -1,5 +1,9 @@
 # Revision history for dec
 
+## 0.0.6
+
+- Support GHC-8.6.5...9.10.1
+
 ## 0.0.5
 
 - Add `boringYes` and `absurdNo`.
